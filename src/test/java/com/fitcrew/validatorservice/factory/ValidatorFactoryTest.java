@@ -5,7 +5,6 @@ import com.fitcrew.validatorservice.validator.admin.AdminValidator;
 import com.fitcrew.validatorservice.validator.client.ClientValidator;
 import com.fitcrew.validatorservice.validator.email.EmailValidator;
 import com.fitcrew.validatorservice.validator.login.LoginValidator;
-import com.fitcrew.validatorservice.validator.rating.RatingValidator;
 import com.fitcrew.validatorservice.validator.trainer.TrainerValidator;
 import com.fitcrew.validatorservice.validator.training.TrainingValidator;
 import com.fitcrew.validatorservice.validator.util.AdminUtil;
@@ -15,7 +14,6 @@ import io.vavr.collection.Seq;
 import io.vavr.control.Validation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -27,15 +25,15 @@ import java.util.Collections;
 import static com.fitcrew.validatorservice.validator.util.AdminUtil.*;
 import static com.fitcrew.validatorservice.validator.util.ClientUtil.*;
 import static com.fitcrew.validatorservice.validator.util.EmailUtil.*;
-import static com.fitcrew.validatorservice.validator.util.LoginUtil.PASSWORD;
 import static com.fitcrew.validatorservice.validator.util.LoginUtil.*;
+import static com.fitcrew.validatorservice.validator.util.LoginUtil.PASSWORD;
+import static com.fitcrew.validatorservice.validator.util.RatingUtil.*;
 import static com.fitcrew.validatorservice.validator.util.RatingUtil.TRAINER_FIRST_NAME;
 import static com.fitcrew.validatorservice.validator.util.RatingUtil.TRAINER_LAST_NAME;
-import static com.fitcrew.validatorservice.validator.util.RatingUtil.*;
 import static com.fitcrew.validatorservice.validator.util.TrainerUtil.*;
 import static com.fitcrew.validatorservice.validator.util.TrainingUtil.*;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,13 +44,12 @@ class ValidatorFactoryTest {
     private final EmailValidator emailValidator = new EmailValidator();
     private final TrainerValidator trainerValidator = new TrainerValidator(dataValidationProvider);
     private final TrainingValidator trainingValidator = new TrainingValidator();
-    private final RatingValidator ratingValidator = new RatingValidator();
     private final LoginValidator loginValidator = new LoginValidator();
     private final ClientValidator clientValidator = new ClientValidator(dataValidationProvider);
     private final AdminValidator adminValidator = new AdminValidator(dataValidationProvider);
 
     private final ValidatorFactory validatorFactory = new ValidatorFactory(
-            emailValidator, trainerValidator, trainingValidator, ratingValidator, loginValidator, clientValidator, adminValidator);
+            emailValidator, trainerValidator, trainingValidator, loginValidator, clientValidator, adminValidator);
 
     @Test
     void shouldReturnTrueAfterEmailDtoValidate() {
@@ -128,30 +125,6 @@ class ValidatorFactoryTest {
 
         //when
         var result = validatorFactory.validate(training);
-
-        //then
-        assertFalseValidation(result);
-    }
-
-    @Test
-    void shouldReturnTrueAfterRatingDtoValidate() {
-        //given
-        var rating = getRatingTrainerDto(TRAINER_FIRST_NAME, TRAINER_LAST_NAME, 10);
-
-        //when
-        var result = validatorFactory.validate(rating);
-
-        //then
-        assertTrueValidation(result);
-    }
-
-    @Test
-    void shouldReturnFalseAfterRatingDtoValidate() {
-        //given
-        var rating = getRatingTrainerDto(null, TRAINER_LAST_NAME, 10);
-
-        //when
-        var result = validatorFactory.validate(rating);
 
         //then
         assertFalseValidation(result);
