@@ -1,11 +1,12 @@
 package com.fitcrew.validatorservice.factory;
 
 import com.fitcrew.FitCrewAppModel.domain.dto.*;
+import com.fitcrew.jwt.model.AuthenticationRequest;
 import com.fitcrew.validatorservice.core.error.model.*;
 import com.fitcrew.validatorservice.validator.admin.AdminValidator;
 import com.fitcrew.validatorservice.validator.client.ClientValidator;
 import com.fitcrew.validatorservice.validator.email.EmailValidator;
-import com.fitcrew.validatorservice.validator.login.LoginValidator;
+import com.fitcrew.validatorservice.validator.authentication.AuthRequestValidator;
 import com.fitcrew.validatorservice.validator.trainer.TrainerValidator;
 import com.fitcrew.validatorservice.validator.training.TrainingValidator;
 import io.vavr.collection.Seq;
@@ -21,20 +22,20 @@ public class ValidatorFactory {
     private final EmailValidator emailValidator;
     private final TrainerValidator trainerValidator;
     private final TrainingValidator trainingValidator;
-    private final LoginValidator loginValidator;
+    private final AuthRequestValidator authRequestValidator;
     private final ClientValidator clientValidator;
     private final AdminValidator adminValidator;
 
     public ValidatorFactory(final EmailValidator emailValidator,
                             final TrainerValidator trainerValidator,
                             final TrainingValidator trainingValidator,
-                            final LoginValidator loginValidator,
+                            final AuthRequestValidator authRequestValidator,
                             final ClientValidator clientValidator,
                             final AdminValidator adminValidator) {
         this.emailValidator = emailValidator;
         this.trainerValidator = trainerValidator;
         this.trainingValidator = trainingValidator;
-        this.loginValidator = loginValidator;
+        this.authRequestValidator = authRequestValidator;
         this.clientValidator = clientValidator;
         this.adminValidator = adminValidator;
     }
@@ -54,9 +55,9 @@ public class ValidatorFactory {
         return Mono.just(trainingValidator.validate(trainingDto));
     }
 
-    public Mono<Validation<Seq<ValidationLoginErrorDto>, LoginDto>> validate(LoginDto loginDto) {
-        log.info("Validation of: {}", loginDto);
-        return Mono.just(loginValidator.validate(loginDto));
+    public Mono<Validation<Seq<ValidationAuthReqErrorDto>, AuthenticationRequest>> validate(AuthenticationRequest authenticationRequest) {
+        log.info("Validation of: {}", authenticationRequest);
+        return Mono.just(authRequestValidator.validate(authenticationRequest));
     }
 
     public Mono<Validation<Seq<ValidationClientErrorDto>, ClientDto>> validate(ClientDto clientDto) {

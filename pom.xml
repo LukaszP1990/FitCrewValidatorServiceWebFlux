@@ -112,6 +112,11 @@
             <version>0.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fitcrew</groupId>
+            <artifactId>FitCrewAppJWTUtil</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

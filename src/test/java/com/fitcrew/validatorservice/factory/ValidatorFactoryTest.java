@@ -4,7 +4,7 @@ import com.fitcrew.validatorservice.core.provider.DataValidationProvider;
 import com.fitcrew.validatorservice.validator.admin.AdminValidator;
 import com.fitcrew.validatorservice.validator.client.ClientValidator;
 import com.fitcrew.validatorservice.validator.email.EmailValidator;
-import com.fitcrew.validatorservice.validator.login.LoginValidator;
+import com.fitcrew.validatorservice.validator.authentication.AuthRequestValidator;
 import com.fitcrew.validatorservice.validator.trainer.TrainerValidator;
 import com.fitcrew.validatorservice.validator.training.TrainingValidator;
 import com.fitcrew.validatorservice.validator.util.AdminUtil;
@@ -22,12 +22,12 @@ import reactor.test.StepVerifier;
 
 import java.util.Collections;
 
+import static com.fitcrew.FitCrewAppConstant.message.type.RoleType.ROLE_TRAINER;
 import static com.fitcrew.validatorservice.validator.util.AdminUtil.*;
+import static com.fitcrew.validatorservice.validator.util.AuthRequestUtil.PASSWORD;
+import static com.fitcrew.validatorservice.validator.util.AuthRequestUtil.*;
 import static com.fitcrew.validatorservice.validator.util.ClientUtil.*;
 import static com.fitcrew.validatorservice.validator.util.EmailUtil.*;
-import static com.fitcrew.validatorservice.validator.util.LoginUtil.*;
-import static com.fitcrew.validatorservice.validator.util.LoginUtil.PASSWORD;
-import static com.fitcrew.validatorservice.validator.util.RatingUtil.*;
 import static com.fitcrew.validatorservice.validator.util.RatingUtil.TRAINER_FIRST_NAME;
 import static com.fitcrew.validatorservice.validator.util.RatingUtil.TRAINER_LAST_NAME;
 import static com.fitcrew.validatorservice.validator.util.TrainerUtil.*;
@@ -44,12 +44,12 @@ class ValidatorFactoryTest {
     private final EmailValidator emailValidator = new EmailValidator();
     private final TrainerValidator trainerValidator = new TrainerValidator(dataValidationProvider);
     private final TrainingValidator trainingValidator = new TrainingValidator();
-    private final LoginValidator loginValidator = new LoginValidator();
+    private final AuthRequestValidator authRequestValidator = new AuthRequestValidator();
     private final ClientValidator clientValidator = new ClientValidator(dataValidationProvider);
     private final AdminValidator adminValidator = new AdminValidator(dataValidationProvider);
 
     private final ValidatorFactory validatorFactory = new ValidatorFactory(
-            emailValidator, trainerValidator, trainingValidator, loginValidator, clientValidator, adminValidator);
+            emailValidator, trainerValidator, trainingValidator, authRequestValidator, clientValidator, adminValidator);
 
     @Test
     void shouldReturnTrueAfterEmailDtoValidate() {
@@ -131,24 +131,24 @@ class ValidatorFactoryTest {
     }
 
     @Test
-    void shouldReturnTrueAfterLoginDtoValidate() {
+    void shouldReturnTrueAfterAuthRequestValidate() {
         //given
-        var login = getLoginDto(LOGIN, PASSWORD);
+        var authRequest = getAuthRequest(LOGIN, PASSWORD, ROLE_TRAINER);
 
         //when
-        var result = validatorFactory.validate(login);
+        var result = validatorFactory.validate(authRequest);
 
         //then
         assertTrueValidation(result);
     }
 
     @Test
-    void shouldReturnFalseAfterLoginDtoValidate() {
+    void shouldReturnFalseAfterAuthRequestValidate() {
         //given
-        var login = getLoginDto(null, PASSWORD);
+        var authRequest = getAuthRequest(null, PASSWORD, ROLE_TRAINER);
 
         //when
-        var result = validatorFactory.validate(login);
+        var result = validatorFactory.validate(authRequest);
 
         //then
         assertFalseValidation(result);
