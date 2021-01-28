@@ -11,11 +11,11 @@ public class AuthRequestUtil {
     public static AuthenticationRequest getAuthRequest(String login,
                                                        String password,
                                                        RoleType roleType) {
-        AuthenticationRequest authenticationRequest = new AuthenticationRequest();
-        authenticationRequest.setEmail(login);
-        authenticationRequest.setPassword(password);
-        authenticationRequest.setRole(roleType);
-        return authenticationRequest;
+        return AuthenticationRequest.builder()
+                .email(login)
+                .password(password)
+                .role(roleType)
+                .build();
     }
 
     public static class AuthRequestData {
