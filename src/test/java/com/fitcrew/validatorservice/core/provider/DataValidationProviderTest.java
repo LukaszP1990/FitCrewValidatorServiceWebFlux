@@ -4,7 +4,9 @@ import com.fitcrew.FitCrewAppModel.domain.dto.AdminDto;
 import com.fitcrew.FitCrewAppModel.domain.dto.ClientDto;
 import com.fitcrew.FitCrewAppModel.domain.dto.TrainerDto;
 import com.fitcrew.validatorservice.core.config.AdminServiceWebClient;
+import com.fitcrew.validatorservice.core.config.ClientServiceWebClient;
 import com.fitcrew.validatorservice.core.config.ReactiveConnectorCreator;
+import com.fitcrew.validatorservice.core.config.TrainerServiceWebClient;
 import com.fitcrew.validatorservice.validator.util.ClientUtil;
 import com.fitcrew.validatorservice.validator.util.TrainerUtil;
 import org.junit.jupiter.api.Test;
@@ -29,9 +31,11 @@ import static org.mockito.Mockito.when;
 class DataValidationProviderTest {
 
     private final AdminServiceWebClient adminServiceWebClient = mock(AdminServiceWebClient.class);
+    private final ClientServiceWebClient clientServiceWebClient = mock(ClientServiceWebClient.class);
+    private final TrainerServiceWebClient trainerServiceWebClient = mock(TrainerServiceWebClient.class);
     private final ReactiveConnectorCreator reactiveConnectorCreator = mock(ReactiveConnectorCreator.class);
     private final DataValidationProvider dataValidationProvider =
-            new DataValidationProvider(adminServiceWebClient, reactiveConnectorCreator);
+            new DataValidationProvider(adminServiceWebClient, clientServiceWebClient, trainerServiceWebClient, reactiveConnectorCreator);
 
     @Test
     void shouldGetAdminById() {
